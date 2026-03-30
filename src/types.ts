@@ -7,12 +7,32 @@ export interface Activity {
   image: string;
 }
 
+export interface UserProfile {
+  email: string;
+  name: string;
+  regNumber: string;
+  role: 'admin' | 'user';
+}
+
 export interface Enquiry {
   id: string;
-  name: string;
-  email: string;
-  subject: string;
+  userId: string;
+  userEmail?: string;
+  userName?: string;
+  regNumber?: string;
   message: string;
-  status: 'pending' | 'responded';
-  timestamp: number;
+  status: 'pending' | 'completed';
+  createdAt: any; // Firestore Timestamp
+}
+
+export interface TourBooking {
+  id: string;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  regNumber: string;
+  tourDate: string;
+  tourDay: string;
+  status: 'pending' | 'completed';
+  createdAt: any; // Firestore Timestamp
 }

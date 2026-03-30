@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    match /users/{email} {
+      // Allow reading a single user doc to check "login"
+      allow get: if true;
+      // Allow creating a user doc for sign up
+      allow create: if true;
+      // Allow update if it's the same user (client-side check is used for now)
+      allow update: if true;
+    }
+
+    match /enquiries/{enquiryId} {
+      // Allow reading all enquiries for the admin dashboard
+      allow read: if true;
+      // Allow anyone to submit an enquiry
+      allow create: if true;
+      // Allow admin to update/delete
+      allow update, delete: if true;
+    }
+
+    match /tour_bookings/{bookingId} {
+      // Allow reading all bookings for the admin dashboard
+      allow read: if true;
+      // Allow anyone to book a tour
+      allow create: if true;
+      // Allow admin to update/delete
+      allow update, delete: if true;
+    }
+  }
+}

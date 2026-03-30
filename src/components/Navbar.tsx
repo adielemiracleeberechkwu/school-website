@@ -1,15 +1,22 @@
 import React from 'react';
-import { GraduationCap, Menu, X, Phone, Mail, MapPin } from 'lucide-react';
+import { GraduationCap, Menu, X, LogOut, User as UserIcon, ShieldCheck } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { User } from 'firebase/auth';
+import { UserProfile } from '../types';
+import { auth } from '../firebase';
 
-export default function Navbar() {
+interface NavbarProps {
+  profile: UserProfile | null;
+  onLogout: () => void;
+}
+
+export default function Navbar({ profile, onLogout }: NavbarProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Activities', href: '#activities' },
     { name: 'Enquiry', href: '#enquiry' },
-    { name: 'About', href: '#about' },
   ];
 
   return (
@@ -23,7 +30,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {profile && profile.role !== 'admin' && navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
@@ -32,9 +39,33 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors">
-              Portal Login
-            </button>
+            
+            {profile ? (
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-end">
+                  <div className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full border border-gray-100">
+                    {profile.role === 'admin' ? (
+                      <ShieldCheck className="h-4 w-4 text-indigo-600" />
+                    ) : (
+                      <UserIcon className="h-4 w-4 text-gray-400" />
+                    )}
+                    <span className="text-xs font-medium text-gray-600">{profile.name}</span>
+                  </div>
+                  <span className="text-[10px] text-gray-400 mr-2">{profile.regNumber}</span>
+                </div>
+                <button 
+                  onClick={onLogout}
+                  className="flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm font-medium text-gray-400 italic">
+                Please sign in to continue
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -57,7 +88,7 @@ export default function Navbar() {
         )}
       >
         <div className="px-4 pt-2 pb-6 space-y-1">
-          {navLinks.map((link) => (
+          {profile && profile.role !== 'admin' && navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
@@ -67,9 +98,15 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
-          <button className="w-full mt-4 bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium">
-            Portal Login
-          </button>
+          {profile && (
+            <button 
+              onClick={onLogout}
+              className="w-full mt-4 flex items-center justify-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-red-100"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>

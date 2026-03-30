@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "User's email address" },
+        "name": { "type": "string", "description": "User's full name" },
+        "regNumber": { "type": "string", "description": "User's registration number" },
+        "role": { "type": "string", "enum": ["admin", "user"], "description": "User's role in the application" }
+      },
+      "required": ["email", "name", "regNumber", "role"]
+    },
+    "Enquiry": {
+      "title": "Enquiry",
+      "description": "User submitted enquiry or task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the enquiry" },
+        "userId": { "type": "string", "description": "ID of the user who submitted the enquiry" },
+        "userEmail": { "type": "string", "description": "Email of the user who submitted the enquiry" },
+        "userName": { "type": "string", "description": "Name of the user who submitted the enquiry" },
+        "regNumber": { "type": "string", "description": "Registration number of the user" },
+        "message": { "type": "string", "description": "The enquiry message" },
+        "status": { "type": "string", "enum": ["pending", "completed"], "description": "Current status of the enquiry" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the enquiry was created" }
+      },
+      "required": ["userId", "message", "status", "createdAt"]
+    },
+    "TourBooking": {
+      "title": "TourBooking",
+      "description": "School tour booking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the booking" },
+        "userId": { "type": "string", "description": "ID of the user who booked the tour" },
+        "userEmail": { "type": "string", "description": "Email of the user" },
+        "userName": { "type": "string", "description": "Name of the user" },
+        "regNumber": { "type": "string", "description": "Registration number" },
+        "tourDate": { "type": "string", "format": "date", "description": "Selected date for the tour" },
+        "tourDay": { "type": "string", "description": "Day of the week" },
+        "status": { "type": "string", "enum": ["pending", "completed"], "description": "Status of the booking" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the booking was made" }
+      },
+      "required": ["userId", "tourDate", "tourDay", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "Enquiry",
+      "description": "User enquiries"
+    },
+    "/tour_bookings/{bookingId}": {
+      "schema": "TourBooking",
+      "description": "Tour bookings"
+    }
+  }
+}
